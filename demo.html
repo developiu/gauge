@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <title>Gauge Widget With SVG</title>
+  </head>
+  
+  <body>
+
+    Insert a value between 0 and 100:
+    <input id="value" type="number" min="0" max="100"><br>
+
+    <div id="tachimetro" style="width: 200px; height: 120px"></div>
+    
+    <script type="text/javascript" src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="node_modules/jquery.easing/jquery.easing.min.js"></script>
+    <script type="text/javascript" src="/gauge/gauge.js"></script>
+    <script type="text/javascript">
+      gauge=new GaugeIndicator("tachimetro");
+      jQuery("#value").change(function() {
+	  var v=jQuery(this).val();
+	  gauge.setValue(v);
+      });
+    </script>
+  </body>
+</html>

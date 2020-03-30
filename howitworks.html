@@ -1,0 +1,92 @@
+<html>
+  <head>
+    <title>Gauge Widget Demo</title>
+  </head>
+  
+  <body>
+
+    Insert a value between 0 and 100:
+    <input id="value" type="number" min="0" max="100"><br>
+
+    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="200px" height="100px" viewBox="-70 -120 130 150">
+      <defs>
+	<style>
+		#warning-icon {
+    			visibility: hidden;
+		}
+	</style>
+        <linearGradient id="green-yellow" gradientUnits="objectBoundingBox" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0%" stop-color="#006400"/>   
+            <stop offset="100%" stop-color="#FFD700"/>   
+        </linearGradient>
+        <linearGradient id="yellow-orange" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#FFD700"/>
+	  <stop offset="100%" stop-color="#FFA500"/>   
+
+        </linearGradient>
+        <linearGradient id="orange-red" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="0" y2="1">
+	  <stop offset="0%" stop-color="#FFA500"/>   
+          <stop offset="20%" stop-color="#FF8C00"/>
+	  <stop offset="40%" stop-color="#FF3000"/>   
+          <stop offset="100%" stop-color="#FF0000"/>
+        </linearGradient>
+      </defs>
+
+        <path d="
+		 M -100 0
+		 A 100 100 0 0 1 -49.4 -86.8
+		 " stroke="url(#green-yellow)" fill="none" stroke-width="20" />
+	<path d="
+		 M -50 -86.602
+		 A 100 100 0 0 1 50 -86.602
+        " stroke="url(#yellow-orange)"  fill="none" stroke-width="20" />
+	<path d="
+		 M 49.6 -87
+		 A 100 100 0 0 1 100 0
+        " stroke="url(#orange-red)"  fill="none" stroke-width="20"  />
+
+	<image id="warning-icon" x="-20" y="-70" width="40" height="40" href="gauge/engine_warning_icon.svg" />
+
+	<g id="indicator">
+	  <path d="
+		   M 0 4
+		   L -100 0
+		   L 0 -4
+		   Z
+		   " fill="red"/>
+	  <circle cx="0" cy="0" r="7" fill="black" />
+	</g>
+    </svg>
+    
+    <script type="text/javascript" src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="node_modules/jquery.easing/jquery.easing.min.js"></script>
+    <script type="text/javascript">
+       /* v deve essere un float compreso tra 0 e 100 */
+      function setIndicatorValue(v) {
+	  v=Math.round(v*180/100);
+
+	  jQuery("#indicator").animate(
+	      {r: v},
+	      {
+		  duration: 400,
+		  easing: "easeOutBack",
+		  step: function(currentValue,tween) {
+		      jQuery("#indicator").attr("transform","rotate("+currentValue+")");
+		      /* 
+		       la funzione di easing potrebbe far andare il valore oltre quello
+		       definitivo. quindi mostra l'icona di prodotto da sostituire solo
+		       se anche il valore finale è maggiore di 180*0.8=144
+		      */
+		      var showIcon=(v>144 && currentValue>144);
+		      jQuery("#warning-icon").css('visibility', showIcon ? "visible" : "hidden");
+		  }
+	      });
+      }
+      
+      jQuery("#value").change(function() {
+	  var v=jQuery(this).val();
+	  setIndicatorValue(v);
+      });
+    </script>
+  </body>
+</html>
